@@ -1,0 +1,246 @@
+@import "tailwindcss";
+
+:root {
+  --background: #08090b;
+  --foreground: #e8e8ea;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-ink: #08090b;
+  --color-panel: #0e1013;
+  --color-live: #e15b55;
+  --color-location: #7eb6c9;
+  --color-voice: #b3a4d6;
+  --color-memory: #6fbfb3;
+  --color-change: #c6a56a;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), sans-serif;
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #e15b55;
+  animation: live-pulse 2.6s ease-in-out infinite;
+}
+
+.localizing {
+  animation: live-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes event-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.event-enter {
+  animation: event-in 300ms ease-out both;
+}
+
+@keyframes milestone-settle {
+  0% {
+    border-color: rgba(198, 165, 106, 0.1);
+  }
+  40% {
+    border-color: rgba(198, 165, 106, 0.34);
+  }
+  100% {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.milestone-card {
+  animation: milestone-settle 700ms ease-out both;
+}
+
+@keyframes privacy-in {
+  from {
+    opacity: 0.2;
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+.privacy-card {
+  animation: privacy-in 520ms ease-out both;
+}
+
+@keyframes seg-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.seg-in {
+  animation: seg-in 320ms ease-out both;
+}
+
+@keyframes speech-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.speech-overlay {
+  transition:
+    opacity 280ms ease-out,
+    transform 280ms ease-out,
+    border-color 280ms ease-out,
+    color 280ms ease-out,
+    background-color 280ms ease-out;
+}
+
+.speech-overlay[data-open="true"] {
+  animation: speech-in 280ms ease-out;
+}
+
+.speech-overlay[data-open="false"] {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+@keyframes plate-drift {
+  from {
+    transform: scale(1.06) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.12) translate3d(-2%, -1.2%, 0);
+  }
+}
+
+.plate-drift {
+  animation: plate-drift 36s ease-in-out infinite alternate;
+}
+
+.plate-kitchen {
+  background:
+    radial-gradient(ellipse at 72% 48%, rgba(62, 68, 74, 0.55), transparent 42%),
+    radial-gradient(ellipse at 28% 70%, rgba(92, 78, 62, 0.28), transparent 46%),
+    linear-gradient(180deg, #16191e 0%, #0a0c10 100%);
+}
+
+.plate-bedroom {
+  background:
+    radial-gradient(ellipse at 34% 58%, rgba(52, 58, 72, 0.5), transparent 46%),
+    radial-gradient(ellipse at 76% 30%, rgba(36, 40, 48, 0.45), transparent 40%),
+    linear-gradient(165deg, #14171c 0%, #08090c 100%);
+}
+
+.stream-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+}
+
+.sensor-grain {
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.55'/></svg>");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .event-enter,
+  .milestone-card,
+  .privacy-card,
+  .seg-in,
+  .plate-drift,
+  .localizing,
+  .live-dot,
+  .speech-overlay {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* Small spinner for work going on in the background (an episode being read). */
+.spinner {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid rgb(255 255 255 / 0.2);
+  border-top-color: var(--color-memory);
+  border-radius: 9999px;
+  animation: spinner-turn 0.8s linear infinite;
+  vertical-align: -1px;
+}
+
+@keyframes spinner-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Timeline of a place: marks drop in one after another, left to right. */
+.timeline-mark {
+  opacity: 0;
+  animation: timeline-drop 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes timeline-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.timeline-line {
+  transform-origin: left;
+  animation: timeline-grow 0.9s ease-out forwards;
+}
+
+@keyframes timeline-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner,
+  .timeline-mark,
+  .timeline-line {
+    animation: none;
+    opacity: 1;
+  }
+}
