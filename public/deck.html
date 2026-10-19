@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OPENSTATE deck</title>
+<style>
+  :root { --bg:#0b0d12; --panel:#141822; --line:#242a38; --text:#e8ecf4; --muted:#9aa3b5; --accent:#f2c14e; }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.55 -apple-system, "Segoe UI", Inter, sans-serif; }
+  nav { position:sticky; top:0; background:rgba(11,13,18,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); padding:10px 16px; display:flex; gap:14px; flex-wrap:wrap; font-size:13px; z-index:2; }
+  nav a { color:var(--muted); text-decoration:none; }
+  nav a:hover { color:var(--text); }
+  section { max-width:880px; margin:0 auto; padding:56px 16px; border-bottom:1px solid var(--line); }
+  h1 { font-size:40px; line-height:1.1; margin:0 0 12px; }
+  h2 { font-size:26px; margin:0 0 16px; }
+  h3 { font-size:17px; margin:18px 0 6px; }
+  p { margin:0 0 12px; }
+  .muted { color:var(--muted); }
+  .accent { color:var(--accent); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:12px; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:14px 16px; }
+  .card b { display:block; font-size:17px; }
+  .card .t { color:var(--accent); font-size:13px; letter-spacing:.04em; text-transform:uppercase; }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:8px; vertical-align:middle; }
+  table { width:100%; border-collapse:collapse; background:var(--panel); border:1px solid var(--line); border-radius:14px; overflow:hidden; }
+  th, td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; font-size:15px; }
+  th { color:var(--muted); font-weight:600; background:#10141f; }
+  tr:last-child td { border-bottom:0; }
+  ol.flow { counter-reset:step; list-style:none; padding:0; margin:0; display:grid; gap:10px; }
+  ol.flow li { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:12px 14px 12px 52px; position:relative; }
+  ol.flow li::before { counter-increment:step; content:counter(step); position:absolute; left:14px; top:12px; width:26px; height:26px; border-radius:50%; background:var(--accent); color:#111; font-weight:700; display:grid; place-items:center; font-size:14px; }
+  iframe { width:100%; height:640px; border:1px solid var(--line); border-radius:14px; background:var(--bg); }
+  .pill { display:inline-block; border:1px solid var(--line); border-radius:999px; padding:2px 10px; font-size:13px; color:var(--muted); margin:2px 4px 2px 0; }
+  footer { text-align:center; color:var(--muted); font-size:13px; padding:32px 16px; }
+  @media (max-width:600px) { h1 { font-size:30px; } section { padding:40px 16px; } iframe { height:560px; } }
+</style>
+</head>
+<body>
+<nav>
+  <a href="#problem">Problem</a><a href="#company">The company</a><a href="#sponsors">Sponsors</a><a href="#demo">Demo</a><a href="#value">Value</a><a href="#today">What works today</a><a href="#business">If this were a business</a><a href="#team">Team</a>
+</nav>
+
+<section id="top">
+  <p class="accent">AI Workforce 2026 · AWS Builder Loft · 19 October 2026</p>
+  <h1>OPENSTATE</h1>
+  <p style="font-size:20px">A household supply company run by six AI agents. Phones are its eyes. People just talk to it.</p>
+  <p class="muted">Track: Commerce, Retail &amp; Consumer (inventory, logistics), with a Health &amp; Care use: "did I already take my pills?"</p>
+  <div>
+    <span class="pill">Masky</span><span class="pill">BAND</span><span class="pill">Flatkey</span><span class="pill">n8n</span><span class="pill">RocketRide</span><span class="pill">Tenki</span><span class="pill">Celesto</span><span class="pill">Kylon</span><span class="pill">Paritok</span><span class="pill">Prelint</span><span class="pill">Snyk</span>
+  </div>
+</section>
+
+<section id="problem">
+  <h2>The problem</h2>
+  <p>Shared spaces leak. In a house, a dorm, a clinic store room or a small shop, nobody knows what is left, who took the last one, or when something went off. People write lists on fridges and forget them. Elderly people and anyone on daily medication lose track of whether they already took it today.</p>
+  <p>The information exists: it is visible to anyone standing in front of the shelf. OPENSTATE turns phones into observers that keep watching, and a team of agents into the staff that acts on what the phones see.</p>
+</section>
+
+<section id="company">
+  <h2>The company: six agents, one mission</h2>
+  <p class="muted">Each agent has a role, a character, a Masky face and voice, and its own tools. They talk to each other in a BAND chat room that humans can read.</p>
+  <div class="grid">
+    <div class="card"><span class="dot" style="background:#f2c14e"></span><b>Mira</b><span class="t">General Manager</span><p>Reads each request, picks the colleague for it, reports the business value.</p></div>
+    <div class="card"><span class="dot" style="background:#57c7ff"></span><b>Iris</b><span class="t">Inventory Coordinator</span><p>Knows what is on every shelf right now, who took what and when.</p></div>
+    <div class="card"><span class="dot" style="background:#b58cff"></span><b>Theo</b><span class="t">Records Keeper</span><p>Keeps the long-term memory: facts, past sightings, the household's vocabulary.</p></div>
+    <div class="card"><span class="dot" style="background:#5ee0a0"></span><b>Nova</b><span class="t">Research Analyst</span><p>Looks things up outside the house in a sandboxed computer: shelf life, recalls, prices. Runs analyses over usage data.</p></div>
+    <div class="card"><span class="dot" style="background:#ff8c5a"></span><b>Ravi</b><span class="t">Procurement &amp; Operations</span><p>Acts: shopping lists, alerts, reminders, emails, the ops pipeline. Never without being asked.</p></div>
+    <div class="card"><span class="dot" style="background:#ff6b9d"></span><b>Sol</b><span class="t">Front Desk</span><p>Talks to the household by voice. One or two spoken sentences from the colleagues' reports.</p></div>
+  </div>
+</section>
+
+<section id="sponsors">
+  <h2>Sponsor map: who does what</h2>
+  <table>
+    <thead><tr><th>Sponsor</th><th>What it does in OPENSTATE</th><th>Agent</th></tr></thead>
+    <tbody>
+      <tr><td>Masky</td><td>A face and a voice for every agent; the spoken answer the phone plays comes from Masky.</td><td>All, Sol speaks</td></tr>
+      <tr><td>BAND</td><td>The agents' chat room. Delegation, reports and @mentions between agents, readable by humans.</td><td>All</td></tr>
+      <tr><td>Flatkey</td><td>One OpenAI-compatible key for every model: vision for the shelves, reasoning for the agents, with failover.</td><td>All</td></tr>
+      <tr><td>n8n</td><td>Workflows for Google Tasks, Slack, Google Calendar and Gmail, triggered by webhook.</td><td>Ravi</td></tr>
+      <tr><td>RocketRide</td><td>The ops pipeline (<code>rocketride/openstate-ops.pipe</code>): webhook → n8n → response, run from the SDK.</td><td>Ravi</td></tr>
+      <tr><td>Tenki</td><td>Disposable Linux VMs for web research and Python analysis of usage data.</td><td>Nova</td></tr>
+      <tr><td>Celesto</td><td>A second sandbox provider behind the same interface; switch with one env var.</td><td>Nova</td></tr>
+      <tr><td>Kylon</td><td>A proxy to connected app tools, searched and executed by name.</td><td>Ravi</td></tr>
+      <tr><td>Paritok</td><td>Compresses long tool output and memory text before the model reads it.</td><td>Theo, Nova</td></tr>
+      <tr><td>Prelint</td><td>Checks every pull request against <code>specs/product.md</code>: agents never act unasked, counts come from the camera.</td><td>Engineering</td></tr>
+      <tr><td>Snyk</td><td>Dependency and code scanning in CI on every push.</td><td>Engineering</td></tr>
+    </tbody>
+  </table>
+  <p class="muted" style="margin-top:12px">Each sponsor is one module with its own status check. Any of them can be missing; the company runs with what is present.</p>
+</section>
+
+<section id="demo">
+  <h2>Demo flow</h2>
+  <ol class="flow">
+    <li><b>Register a place.</b> Observer 01 points a phone at the snack table: "Hey World, remember this." Iris stores the place, its reference photo and its counted contents.</li>
+    <li><b>Someone takes an item.</b> Observer 02 picks up a protein bar. The dashboard recognises the table, sends the episode, and the count drops by one, credited to whose camera saw it.</li>
+    <li><b>Ask the company.</b> "Hey World, what are we out of?" Mira delegates: Iris reports the counts, Theo the history, Nova the pace. Sol answers aloud in Masky's voice.</li>
+    <li><b>Act.</b> "Add what we're out of to my shopping list." Ravi runs the n8n workflow; the items land in Google Tasks. The ops pipeline on RocketRide carries the low-stock notice.</li>
+    <li><b>Research in a sandbox.</b> "Is there a recall on protein bars?" Nova boots a Tenki VM, fetches the sources, and reports with a citation.</li>
+    <li><b>Watch them work.</b> Every message between agents appears on the dashboard and in the BAND room, as it happens.</li>
+  </ol>
+</section>
+
+<section id="value">
+  <h2>Business value and growth</h2>
+  <h3>Who it serves</h3>
+  <p>Households and shared homes first: fewer wasted trips, less food thrown out, and a calm answer to "did I take my pills?" Then the places with the same problem and a budget: care homes, student housing, clinics' supply rooms, small shops.</p>
+  <h3>How it earns</h3>
+  <p>A subscription per household or per site. Costs are a few model calls per question and per shelf change; the camera work runs on the laptop and the phones.</p>
+  <h3>How it grows</h3>
+  <p>Every registered place is a data point about how fast things run out. That becomes reorder automation, supplier integrations through n8n and Kylon, and, for care settings, a record a family can trust.</p>
+  <h3>How it keeps people safe</h3>
+  <p>Agents act only when asked. "Ignore this" pauses the memory for five minutes and nothing is stored. The product spec is enforced on every pull request.</p>
+</section>
+
+<section id="today">
+  <h2>What works today, honestly</h2>
+  <div class="grid">
+    <div class="card"><b>Real</b><p>Counting items on a registered place from phone video; noticing a removal and who took it; answering from stored state from any phone; long-term memory on Atlas; the six-agent delegation loop with a visible transcript; tool calling with sandboxed research; workflow actions through n8n; status checks for every sponsor module.</p></div>
+    <div class="card"><b>Depends on keys at demo time</b><p>Masky voices and faces, the BAND room mirror, RocketRide pipeline runs, Kylon actions and Paritok compression each switch on when their key is present. Without a key the module reports "not configured" and the company carries on.</p></div>
+    <div class="card"><b>Known limits</b><p>An update after a shelf change takes several seconds, most of it the vision model. Names for similar small items can drift between looks. Deep checks spend sponsor credits.</p></div>
+  </div>
+</section>
+
+<section id="business">
+  <h2>If this were a business</h2>
+  <p class="muted">A systematic investment plan calculator, as the hackathon conventions ask: what a monthly subscription, reinvested, compounds to year by year.</p>
+  <iframe src="/sip.html" title="SIP calculator" loading="lazy"></iframe>
+</section>
+
+<section id="team">
+  <h2>Team</h2>
+  <p>Built at AWS Builder Loft on 19 October 2026 by the OPENSTATE team, with AI agents as collaborators. The full session history is in <code>llm-turn-history.jsonl</code> under the Open Session License.</p>
+  <p class="muted">Source: the public GitHub repository linked from the submission. Project description in Simplified Technical English: <code>ASD-STE100.md</code>.</p>
+</section>
+
+<footer>OPENSTATE · AI Workforce 2026</footer>
+</body>
+</html>

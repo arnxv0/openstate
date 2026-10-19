@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SIP calculator</title>
+<style>
+  :root { --bg:#0b0d12; --panel:#141822; --line:#242a38; --text:#e8ecf4; --muted:#9aa3b5; --accent:#f2c14e; --green:#5ee0a0; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.5 -apple-system, "Segoe UI", Inter, sans-serif; padding:16px; }
+  h1 { font-size:20px; margin:0 0 4px; }
+  p { color:var(--muted); margin:0 0 16px; }
+  form { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:12px; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px; }
+  label { display:flex; flex-direction:column; gap:4px; font-size:13px; color:var(--muted); }
+  input { background:#0f1320; color:var(--text); border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:15px; }
+  .totals { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:12px; margin:16px 0; }
+  .tile { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px; }
+  .tile b { display:block; font-size:22px; color:var(--accent); }
+  .tile.g b { color:var(--green); }
+  .tile span { font-size:12px; color:var(--muted); }
+  table { width:100%; border-collapse:collapse; background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden; font-variant-numeric:tabular-nums; }
+  th, td { text-align:right; padding:8px 10px; border-bottom:1px solid var(--line); font-size:14px; }
+  th:first-child, td:first-child { text-align:left; }
+  th { color:var(--muted); font-weight:600; background:#10141f; }
+  tr:last-child td { border-bottom:0; }
+  small { color:var(--muted); display:block; margin-top:12px; }
+</style>
+</head>
+<body>
+  <h1>Systematic investment plan</h1>
+  <p>A fixed monthly amount, compounded monthly at a yearly rate, shown year by year.</p>
+  <form id="sip">
+    <label>Monthly amount ($)<input id="monthly" type="number" min="0" step="10" value="200" /></label>
+    <label>Yearly return (%)<input id="rate" type="number" min="0" max="100" step="0.5" value="8" /></label>
+    <label>Years<input id="years" type="number" min="1" max="60" step="1" value="10" /></label>
+  </form>
+  <div class="totals">
+    <div class="tile"><span>Paid in</span><b id="paid">–</b></div>
+    <div class="tile g"><span>Value at the end</span><b id="value">–</b></div>
+    <div class="tile"><span>Growth</span><b id="growth">–</b></div>
+  </div>
+  <table>
+    <thead><tr><th>Year</th><th>Paid in</th><th>Value</th><th>Growth</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <small>Illustration only. Returns are assumed, not promised; a real plan has fees, tax and years with losses.</small>
+<script>
+  const money = (n) => "$" + Math.round(n).toLocaleString("en-US");
+  function compute() {
+    const monthly = Math.max(0, Number(document.getElementById("monthly").value) || 0);
+    const rate = Math.max(0, Number(document.getElementById("rate").value) || 0) / 100;
+    const years = Math.min(60, Math.max(1, Math.round(Number(document.getElementById("years").value) || 1)));
+    const r = rate / 12;
+    let value = 0, paid = 0;
+    const rows = [];
+    for (let y = 1; y <= years; y++) {
+      for (let m = 0; m < 12; m++) { value = value * (1 + r) + monthly; paid += monthly; }
+      rows.push({ y, paid, value, growth: value - paid });
+    }
+    document.getElementById("rows").innerHTML = rows
+      .map((row) => `<tr><td>${row.y}</td><td>${money(row.paid)}</td><td>${money(row.value)}</td><td>${money(row.growth)}</td></tr>`)
+      .join("");
+    const last = rows[rows.length - 1];
+    document.getElementById("paid").textContent = money(last.paid);
+    document.getElementById("value").textContent = money(last.value);
+    document.getElementById("growth").textContent = money(last.growth);
+  }
+  document.getElementById("sip").addEventListener("input", compute);
+  compute();
+</script>
+</body>
+</html>

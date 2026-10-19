@@ -1,0 +1,40 @@
+{
+  "name": "openstate-ops",
+  "description": "OPENSTATE operations pipeline: a request from the Procurement agent goes to the n8n ops workflow and its reply comes back.",
+  "version": 1,
+  "source": "webhook_1",
+  "project_id": "00000000-0000-0000-0000-000000000000",
+  "components": [
+    {
+      "id": "webhook_1",
+      "provider": "webhook",
+      "name": "Request from OPENSTATE",
+      "config": { "hideForm": true, "mode": "Source", "parameters": {}, "type": "webhook" },
+      "ui": { "position": { "x": 20, "y": 200 }, "measured": { "width": 150, "height": 66 }, "nodeType": "default", "formDataValid": true }
+    },
+    {
+      "id": "tool_n8n_1",
+      "provider": "tool_n8n",
+      "name": "n8n openstate-ops",
+      "config": {
+        "type": "tool_n8n",
+        "baseUrl": "${ROCKETRIDE_N8N_URL}",
+        "apiKey": "${ROCKETRIDE_N8N_KEY}",
+        "workflow": "openstate-ops",
+        "mode": "sync",
+        "parameters": {}
+      },
+      "input": [{ "lane": "text", "from": "webhook_1" }],
+      "ui": { "position": { "x": 240, "y": 200 }, "measured": { "width": 150, "height": 66 }, "nodeType": "default", "formDataValid": true }
+    },
+    {
+      "id": "response_text_1",
+      "provider": "response_text",
+      "name": "Reply to OPENSTATE",
+      "config": { "laneName": "text" },
+      "input": [{ "lane": "text", "from": "tool_n8n_1" }],
+      "ui": { "position": { "x": 460, "y": 200 }, "measured": { "width": 150, "height": 66 }, "nodeType": "default", "formDataValid": true }
+    }
+  ],
+  "viewport": { "x": 0, "y": 0, "zoom": 1 }
+}

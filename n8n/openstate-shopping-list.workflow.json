@@ -1,0 +1,53 @@
+{
+  "name": "openstate-shopping-list",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "openstate-shopping-list", "responseMode": "responseNode", "options": {} },
+      "id": "webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": { "fieldToSplitOut": "body.items", "options": {} },
+      "id": "split",
+      "name": "One item per row",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "resource": "task",
+        "operation": "create",
+        "task": "@default",
+        "title": "={{ $json['body.items'] ?? $json.items ?? $json }}",
+        "additionalFields": { "notes": "={{ $('Webhook').item.json.body.note ?? 'Added by OPENSTATE' }}" }
+      },
+      "id": "tasks",
+      "name": "Google Tasks",
+      "type": "n8n-nodes-base.googleTasks",
+      "typeVersion": 1,
+      "position": [440, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"ok\": true, \"created\": $input.all().length } }}",
+        "options": {}
+      },
+      "id": "respond",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [660, 0]
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[{ "node": "One item per row", "type": "main", "index": 0 }]] },
+    "One item per row": { "main": [[{ "node": "Google Tasks", "type": "main", "index": 0 }]] },
+    "Google Tasks": { "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" }
+}

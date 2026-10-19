@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "ignore_patterns": [
+    "tests/**",
+    "**/*.test.ts",
+    "docs/**",
+    "*.md",
+    "public/videos/**",
+    "llm-turn-history.jsonl"
+  ],
+  "context_files": ["specs/product.md", "ASD-STE100.md"],
+  "output": { "comments": true, "check_run": true }
+}
