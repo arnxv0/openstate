@@ -1,0 +1,39 @@
+{
+  "name": "openstate",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "db:setup": "node --env-file-if-exists=.env --env-file-if-exists=.env.local --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/setup-atlas.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "node --env-file-if-exists=.env --import ./scripts/alias-loader.mjs --experimental-strip-types --disable-warning=ExperimentalWarning --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-sponsors.ts",
+    "masky:avatars": "node --env-file-if-exists=.env --import ./scripts/alias-loader.mjs --experimental-strip-types --disable-warning=ExperimentalWarning --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/masky-avatars.ts"
+  },
+  "dependencies": {
+    "@celestoai/sdk": "^0.1.6",
+    "@elevenlabs/client": "^1.27.0",
+    "@mediapipe/tasks-vision": "^1.1.0",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "@tenkicloud/sandbox": "^1.4.1",
+    "mongodb": "^7.7.0",
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "rocketride": "^1.4.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.0",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vitest": "^3.2.7"
+  }
+}

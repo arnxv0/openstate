@@ -1,0 +1,39 @@
+{
+  "mcpServers": {
+    "mongodb": {
+      "command": "sh",
+      "args": [
+        "-c",
+        "set -a; [ -f ./.env.mcp ] && . ./.env.mcp; set +a; exec npx -y mongodb-mcp-server@3"
+      ]
+    },
+    "prelint": {
+      "type": "http",
+      "url": "https://app.prelint.com/mcp"
+    },
+    "rocketride": {
+      "type": "http",
+      "url": "https://api.rocketride.ai/mcp"
+    },
+    "tenki": {
+      "type": "http",
+      "url": "https://mcp.tenki.cloud/mcp"
+    },
+    "snyk": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "snyk@latest",
+        "mcp",
+        "-t",
+        "stdio"
+      ],
+      "env": {}
+    },
+    "band-docs": {
+      "type": "http",
+      "url": "https://docs.band.ai/_mcp/server"
+    }
+  }
+}
