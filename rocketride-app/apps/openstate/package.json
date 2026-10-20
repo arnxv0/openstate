@@ -1,12 +1,12 @@
 {
-	"name": "local-openstate",
+	"name": "rocketride-openstate",
 	"version": "0.1.0",
 	"private": true,
 	"description": "OPENSTATE \u2014 a RocketRide app",
 	"license": "MIT",
 	"appManifest": {
-		"id": "local.openstate",
-		"publisher": "local",
+		"id": "rocketride.openstate",
+		"publisher": "rocketride",
 		"name": "OPENSTATE",
 		"description": "Shared spatial memory run by a company of AI agents: what is where, who moved it, and when.",
 		"icon": "./icon.svg",
@@ -20,7 +20,7 @@
 			"configuration": {
 				"title": "OPENSTATE",
 				"properties": {
-					"local.openstate.backendUrl": {
+					"rocketride.openstate.backendUrl": {
 						"type": "string",
 						"default": "http://localhost:3000",
 						"description": "Base URL of the OPENSTATE backend (the Next.js app), e.g. the cloudflared tunnel."

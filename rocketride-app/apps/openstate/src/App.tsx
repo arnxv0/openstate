@@ -39,7 +39,7 @@ import {
 type Item = { name: string; count: number; since?: string; by?: string };
 type Site = { name: string; place: string | null; items: Item[]; lastSeen?: string; lastObserver?: string; lastChange?: { summary: string; by?: string } | null };
 type Change = { id: string; at: string; kind: string; item: string; who: string | null; detail?: string; summary: string };
-type Trend = { item: string; site: string; inStock: number; used: number; tracked: string; perDay: number; runsOutIn: string | null; buy: string };
+type Trend = { item: string; site: string; inStock: number | null; used: number; tracked: string; perDay: number | null; runsOutIn: string | null; buy: string };
 type Shopping = { item: string; site: string; reason: string };
 type State = { sites: Site[]; changes: Change[]; trends: Trend[]; shoppingList: Shopping[] };
 
@@ -50,7 +50,7 @@ type Company = { roster: Agent[]; avatars: Avatar[]; band: { configured: boolean
 
 type Ask = { answer?: string; company?: { agents?: string[]; transcript?: Line[] }; latencyMs?: number; error?: string };
 
-const SETTING_URL = 'local.openstate.backendUrl';
+const SETTING_URL = 'rocketride.openstate.backendUrl';
 const DEFAULT_URL = 'http://localhost:3000';
 
 // =============================================================================
@@ -77,11 +77,46 @@ const styles: Record<string, React.CSSProperties> = {
 // DATA
 // =============================================================================
 
-/** Backend base URL from the app's settings, trailing slash removed. */
-function useBackend(): string {
+const FALLBACK_URLS = ['http://localhost:3000', 'http://localhost:3001'];
+
+/**
+ * Backend base URL: the app setting, or the first local candidate whose
+ * /api/health answers (the Next.js dev server is on 3000 or 3001).
+ */
+function useBackend(): { base: string; ready: boolean } {
 	const { settings } = useWorkspace();
-	const raw = (settings?.[SETTING_URL] as string | undefined) || DEFAULT_URL;
-	return raw.replace(/\/$/, '');
+	const configured = ((settings?.[SETTING_URL] as string | undefined) || DEFAULT_URL).replace(/\/$/, '');
+	const [resolved, setResolved] = useState(configured);
+	const [ready, setReady] = useState(false);
+	useEffect(() => {
+		let alive = true;
+		setReady(false);
+		const candidates = [configured, ...FALLBACK_URLS.filter((url) => url !== configured)];
+		(async () => {
+			for (const url of candidates) {
+				try {
+					const response = await fetch(`${url}/api/health`, { cache: 'no-store', signal: AbortSignal.timeout(4000) });
+					if (response.ok) {
+						if (alive) {
+							setResolved(url);
+							setReady(true);
+						}
+						return;
+					}
+				} catch {
+					/* try the next candidate */
+				}
+			}
+			if (alive) {
+				setResolved(configured);
+				setReady(true);
+			}
+		})();
+		return () => {
+			alive = false;
+		};
+	}, [configured]);
+	return { base: resolved, ready };
 }
 
 async function getJson<T>(url: string): Promise<T> {
@@ -136,7 +171,7 @@ const Overview: React.FC<{ base: string }> = ({ base }) => {
 				<Card header="Trends">
 					{state.trends.map((trend) => (
 						<div key={`${trend.site}-${trend.item}`} style={styles.line}>
-							<strong>{trend.item}</strong> at {trend.site}: {trend.inStock} left, {trend.perDay.toFixed(1)} a day{' '}
+							<strong>{trend.item}</strong> at {trend.site}: {trend.inStock ?? 0} left, {(trend.perDay ?? 0).toFixed(1)} a day{' '}
 							<StatusBadge variant={trend.buy === 'out' ? 'error' : trend.buy === 'soon' ? 'warning' : 'success'}>{trend.buy}</StatusBadge>
 						</div>
 					))}
@@ -325,7 +360,7 @@ const SidebarNav: React.FC<{ active: ViewId; onPick: (id: ViewId) => void }> = (
 
 const App: React.FC = () => {
 	const { prefs, updatePrefs } = useWorkspace();
-	const base = useBackend();
+	const { base, ready } = useBackend();
 	const active = ((prefs as { view?: ViewId } | undefined)?.view ?? 'overview') as ViewId;
 	const pick = (view: ViewId) => updatePrefs({ view } as Record<string, unknown>);
 	const view = VIEWS.find((entry) => entry.id === active) ?? VIEWS[0];
@@ -333,11 +368,19 @@ const App: React.FC = () => {
 		<AppLayout sidebar={<SidebarNav active={view.id} onPick={pick} />} status={<span style={styles.mono}>backend {base}</span>}>
 			<div style={styles.wrap}>
 				<ContentHeader title={view.title} subtitle={view.subtitle} actions={<span style={styles.row}><BxCog /> <span style={styles.muted}>Settings → Backend URL</span></span>} />
-				{view.id === 'overview' && <Overview base={base} />}
-				{view.id === 'company' && <CompanyView base={base} />}
-				{view.id === 'ask' && <AskView base={base} />}
-				{view.id === 'observers' && <ObserversView base={base} />}
-				{view.id === 'live' && <LiveView base={base} />}
+				<div style={{ ...styles.row, marginBottom: 14, flexWrap: 'wrap' }}>
+					{VIEWS.map((entry) => (
+						<Button key={entry.id} small variant={entry.id === view.id ? 'primary' : 'secondary'} onClick={() => pick(entry.id)}>
+							{entry.label}
+						</Button>
+					))}
+				</div>
+				{!ready && <EmptyState title="Finding the backend" description="Checking the OPENSTATE API on the configured URL and the local dev ports." />}
+				{ready && view.id === 'overview' && <Overview key={base} base={base} />}
+				{ready && view.id === 'company' && <CompanyView key={base} base={base} />}
+				{ready && view.id === 'ask' && <AskView key={base} base={base} />}
+				{ready && view.id === 'observers' && <ObserversView key={base} base={base} />}
+				{ready && view.id === 'live' && <LiveView key={base} base={base} />}
 			</div>
 		</AppLayout>
 	);

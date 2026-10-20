@@ -19,7 +19,7 @@ import type { AppDescriptor } from 'shell';
 import App from './App';
 
 const descriptor: AppDescriptor = {
-	id: 'local.openstate',
+	id: 'rocketride.openstate',
 	name: 'OPENSTATE',
 	branding: { appName: 'OPENSTATE' },
 	app: App,
