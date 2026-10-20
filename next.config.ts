@@ -11,6 +11,21 @@ const nextConfig: NextConfig = {
     "10.0.0.*",
     "192.168.*.*",
   ],
+  // The RocketRide app (rocketride-app/) calls these routes from the
+  // RocketRide shell's origin.
+  async headers() {
+    return [
+      {
+        source: "/api/:path*",
+        headers: [
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Access-Control-Allow-Methods", value: "GET,POST,OPTIONS" },
+          { key: "Access-Control-Allow-Headers", value: "Content-Type, X-Frame-At" },
+          { key: "Access-Control-Expose-Headers", value: "X-Frame-Seq, X-Voice-Engine" },
+        ],
+      },
+    ];
+  },
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

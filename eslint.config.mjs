@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // The RocketRide app has its own pnpm toolchain and shell types.
+    "rocketride-app/**",
   ]),
 ]);
 

@@ -60,7 +60,7 @@ the dashboard. The roster is `lib/company/roster.ts`.
 | **Flatkey** | Model router and fallback when OpenAI is slow or out of credit. |
 | **Tenki** | A fresh sandboxed VM for Nova's research and Python analyses. |
 | **Paritok** | Compresses long agent reports before they reach the Front Desk. |
-| **RocketRide** | Ravi's ops pipeline (`rocketride/openstate-ops.pipe`). |
+| **RocketRide** | Ravi's ops pipeline (`rocketride/openstate-ops.pipe`), and the frontend as a RocketRide App Builder app (`rocketride-app/`). |
 | **n8n** | Alerts, reminders and emails through webhooks (`n8n/*.workflow.json`). |
 | **Celesto, Kylon** | Extra tools for the scout and the runner. |
 | **Prelint** | Reviews every pull request against `specs/product.md`. |
