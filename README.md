@@ -120,7 +120,14 @@ Cloud. See [`rocketride-app/`](rocketride-app/README.md).
 ![OPENSTATE on RocketRide: overview](docs/rocketride-app-overview.jpg)
 ![OPENSTATE on RocketRide: the company](docs/rocketride-app-company.jpg)
 
-## How Masky is used
+## How each sponsor is used
+
+Every sponsor is an independent module in `lib/sponsors/`. Each one reads
+its own environment variables, reports `configured: false` when they are
+missing, never throws into the company, and can be checked alone with
+`npm run check -- <sponsor>` or `GET /api/health?sponsor=<sponsor>`.
+
+### Masky
 
 OPENSTATE is a shared spatial memory. Meta AI glasses stream what they see,
 and six AI agents keep track of what is where, who moved it, and when. Masky
@@ -133,6 +140,103 @@ is a Masky conversation turn in speak mode: the app posts the line, polls for
 the render, and plays it back (`lib/sponsors/masky.ts`, `/api/tts`).
 ElevenLabs and OpenAI are only fallbacks. In the demo video, Sol's voice is
 Masky too.
+
+### BAND
+
+BAND is the room where the company talks. Each agent in the roster is a
+remote agent registered in BAND with its own key, and one chat room holds all
+six. Every line of the company transcript is posted from the agent that said
+it, @mentioning the agent it is for, so you can watch Mira delegate and the
+specialists report back in BAND while the dashboard shows the same exchange.
+Send-only and best-effort: a BAND outage never slows an answer.
+Module: `lib/sponsors/band.ts`. Env: `BAND_AGENTS`, `BAND_ROOM_ID`.
+
+### Flatkey
+
+Flatkey is the model router and the fallback. The model client tries OpenAI
+first and, when a call fails, times out or runs out of credit, the same
+Responses API request goes to Flatkey's router with its own model list.
+`MODEL_ROUTE=flatkey` puts Flatkey first; `openai-only` disables it.
+Module: `lib/sponsors/flatkey.ts`, routing in `lib/openai.ts`.
+Env: `FLATKEY_API_KEY`.
+
+### Tenki
+
+Tenki runs Nova's research. Every call creates a disposable Linux VM, fetches
+the web there, runs the Python the model wrote there, and closes the VM, so
+nothing the web returns ever runs on the server. This is where product
+recalls, shelf life and usage analyses come from.
+Module: `lib/sponsors/tenki.ts`, tools in `lib/sponsors/research.ts`.
+Env: `TENKI_API_KEY`.
+
+### Paritok
+
+Paritok compresses long agent reports and tool outputs before they go back
+into the model, keyed to the question being asked, so a research result or a
+long event list costs a fraction of the tokens. Without a key, text passes
+through unchanged. Module: `lib/sponsors/paritok.ts`.
+Env: `PARITOK_API_KEY`, `PARITOK_MIN_CHARS`.
+
+### RocketRide
+
+RocketRide is used twice. Ravi's ops pipeline, `rocketride/openstate-ops.pipe`,
+is a webhook to n8n to response graph that RocketRide runs when the household
+asks for an action, so the hand-off is visible on the RocketRide canvas. And
+the whole frontend runs as a RocketRide App Builder app in `rocketride-app/`,
+deployed to the open-source engine in Docker or to RocketRide Cloud. RocketRide
+is also one of the MCP servers the agents can call.
+Module: `lib/sponsors/rocketride.ts`. Env: `ROCKETRIDE_APIKEY`, `ROCKETRIDE_URI`.
+
+### n8n
+
+n8n is the company's hands. Each action is an n8n workflow that starts with a
+Webhook node and ends with Respond to Webhook: shopping list, alert,
+reminder, email, health and ops, all importable from `n8n/`. Ravi posts JSON
+to the workflow; n8n holds the Google Tasks, Slack, Calendar and Gmail
+credentials, so the app never sees them.
+Module: `lib/sponsors/n8n.ts`. Env: `N8N_WEBHOOK_BASE`, `N8N_WEBHOOK_SECRET`.
+
+### Celesto
+
+Celesto provides sandboxed computers with the same shape as Tenki, so either
+can run Nova's scripts. `SANDBOX_PROVIDER=tenki|celesto` picks one; otherwise
+whichever key is set is used, Tenki first. One computer per call, deleted
+after. Module: `lib/sponsors/celesto.ts`, `lib/sponsors/sandbox.ts`.
+Env: `CELESTO_API_KEY`.
+
+### Kylon
+
+Kylon is a proxy to the apps a workspace has connected, so Ravi can reach an
+app that no n8n workflow covers yet. The agent searches Kylon for a tool,
+then runs it. Module: `lib/sponsors/kylon.ts`.
+Env: `KYLON_API_KEY`, `KYLON_BASE_URL`.
+
+### Prelint
+
+Prelint reviews every pull request against the product spec in
+`specs/product.md` and the Simplified Technical English description in
+`ASD-STE100.md`, posting comments and a check run. Config: `prelint.json`.
+
+### Snyk
+
+Snyk scans the dependencies and code on every push and pull request in
+`.github/workflows/ci.yml`, after typegen, typecheck, lint and the unit
+tests. Needs the `SNYK_TOKEN` repository secret.
+
+### MCP bridge
+
+Any sponsor that speaks the Model Context Protocol becomes a set of tools for
+the agents with no per-sponsor code. Servers are listed in `MCP_SERVERS` as
+`name=url` or `name=stdio:<command>` pairs, tokens in `MCP_TOKEN_<NAME>`, and
+each tool is exposed to the roster as `mcp_<server>_<tool>`. Today that is
+Masky, Tenki and RocketRide. Module: `lib/sponsors/mcp.ts`.
+
+### MongoDB Atlas
+
+Atlas holds everything: events, places, episodes and the long-term memory
+collection, with a vector index for semantic recall and a text index for
+exact terms, combined with hybrid search. `npm run db:setup` creates the
+collections and indexes.
 
 ## For the judges
 
