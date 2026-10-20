@@ -7,7 +7,7 @@ see to a dashboard. Six AI agents watch, remember what is where, who moved it
 and when, and answer out loud when someone asks "Hey World, …".
 
 Built in one day for the **AI Workforce 2026 hackathon** (AWS Builder Loft,
-19 October 2026). Demo video: `openstate-demo-remotion.mp4` (see below).
+19 October 2026). **Demo video:** https://youtu.be/t_A60ZG4jn8
 Deck: [`/deck.html`](public/deck.html). Simplified Technical English
 description: [`ASD-STE100.md`](ASD-STE100.md). Session history:
 `llm-turn-history.jsonl` under the [Open Session License](OPEN-SESSION-LICENSE.md).
