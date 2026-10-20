@@ -111,6 +111,29 @@ them an HTTPS URL). Say "Hey World, remember this table", then ask questions.
 
 Before handing work back: `npx tsc --noEmit`, `npm run lint`, `npm test`.
 
+## The frontend on RocketRide
+
+The same frontend also runs as a RocketRide App Builder app inside the
+RocketRide shell, against the open-source engine in Docker or RocketRide
+Cloud. See [`rocketride-app/`](rocketride-app/README.md).
+
+![OPENSTATE on RocketRide: overview](docs/rocketride-app-overview.jpg)
+![OPENSTATE on RocketRide: the company](docs/rocketride-app-company.jpg)
+
+## How Masky is used
+
+OPENSTATE is a shared spatial memory. Meta AI glasses stream what they see,
+and six AI agents keep track of what is where, who moved it, and when. Masky
+gives every one of those agents a face and a voice. Mira, Iris, Theo, Nova,
+Ravi and Sol are Masky avatars, created through the Masky API and shown on
+the dashboard and in the RocketRide app. When someone asks "Hey World, should
+I buy some Pepsi?", the agents work it out, and Sol speaks the answer through
+her Masky avatar in real time, on the phone and on the dashboard. Her speech
+is a Masky conversation turn in speak mode: the app posts the line, polls for
+the render, and plays it back (`lib/sponsors/masky.ts`, `/api/tts`).
+ElevenLabs and OpenAI are only fallbacks. In the demo video, Sol's voice is
+Masky too.
+
 ## For the judges
 
 - **Public repo:** this one.
