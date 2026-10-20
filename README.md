@@ -38,90 +38,49 @@ everything every camera has seen there.
 
 ## System design
 
+**1. The flow.** Frames go in, events land in Atlas, a question comes back
+as a spoken answer.
+
 ```mermaid
-flowchart LR
-    subgraph Eyes["Eyes"]
-        G1["Meta AI glasses / phone 01<br/>(Thilak)"]
-        G2["Meta AI glasses / phone 02<br/>(Arnav)"]
-    end
+flowchart TB
+    G["Meta AI glasses / phones<br/>Thilak · Arnav"]
+    OBS["/observe pages<br/>frames + 'Hey World' speech"]
+    DASH["Dashboard<br/>anchor match · capture lease"]
+    PERC["Perception<br/>keyframes → contents + changes"]
+    ATLAS[("MongoDB Atlas<br/>events · places · memories")]
+    ASK["/api/ask · Front Desk"]
+    CO["The company<br/>Mira → Iris · Theo · Nova · Ravi → Sol"]
+    VOICE["Masky voice<br/>Sol's avatar speaks"]
 
-    subgraph App["OPENSTATE · Next.js"]
-        OBS["/observe pages<br/>frames + 'Hey World' speech"]
-        DASH["Dashboard<br/>anchor match · capture lease"]
-        PERC["Perception<br/>keyframes → contents + changes"]
-        ASK["/api/ask<br/>Front Desk"]
-        RR["RocketRide app<br/>(rocketride-app/)"]
-    end
-
-    subgraph Company["The company · lib/company"]
-        MIRA["Mira · GM<br/>delegates"]
-        IRIS["Iris · Eyes<br/>counts now"]
-        THEO["Theo · Ledger<br/>long-term memory"]
-        NOVA["Nova · Scout<br/>research"]
-        RAVI["Ravi · Runner<br/>actions"]
-        SOL["Sol · Front Desk<br/>one spoken answer"]
-    end
-
-    subgraph Sponsors["Sponsors"]
-        ATLAS[("MongoDB Atlas<br/>events · places · memories<br/>vector + text search")]
-        OAI["OpenAI<br/>vision + reasoning"]
-        FLAT["Flatkey<br/>model router · fallback"]
-        MASKY["Masky<br/>avatars + Sol's voice"]
-        BAND["BAND<br/>agents' chat room"]
-        TENKI["Tenki / Celesto<br/>sandbox VM"]
-        PARI["Paritok<br/>report compression"]
-        RRP["RocketRide<br/>ops pipeline + app shell"]
-        N8N["n8n<br/>webhooks → Tasks, Slack, Gmail"]
-        KYLON["Kylon<br/>connected-app proxy"]
-        MCP["MCP bridge<br/>Masky · Tenki · RocketRide tools"]
-        PRE["Prelint + Snyk<br/>PR review · security scan"]
-    end
-
-    G1 --> OBS
-    G2 --> OBS
-    OBS -->|frames over WebRTC / relay| DASH
-    DASH -->|keyframes| PERC
-    PERC -->|describe frames| OAI
-    OAI -.->|fallback| FLAT
-    PERC -->|events, places, episodes| ATLAS
-    OBS -->|"Hey World, …"| ASK
-    ASK --> MIRA
-    MIRA --> IRIS
-    MIRA --> THEO
-    MIRA --> NOVA
-    MIRA --> RAVI
-    IRIS --> SOL
-    THEO --> SOL
-    NOVA --> SOL
-    RAVI --> SOL
-    IRIS -->|recall, events| ATLAS
-    THEO -->|hybrid search| ATLAS
-    NOVA -->|web + Python| TENKI
-    NOVA & RAVI -->|tools| MCP
-    RAVI --> RRP
-    RAVI --> N8N
-    RAVI --> KYLON
-    RRP --> N8N
-    IRIS & THEO & NOVA & RAVI -->|long reports| PARI
-    PARI --> SOL
-    MIRA & IRIS & THEO & NOVA & RAVI & SOL -->|every hand-off| BAND
-    SOL -->|answer text| MASKY
-    MASKY -->|rendered voice| OBS
-    MASKY -->|6 avatars| DASH
-    DASH --> RR
-    RRP --> RR
-    PRE -.->|CI on every push| App
+    G -->|video| OBS --> DASH -->|keyframes| PERC
+    PERC -->|OpenAI vision<br/>Flatkey fallback| ATLAS
+    G -->|"Hey World, should I buy some Pepsi?"| ASK --> CO
+    CO <-->|recall · trends| ATLAS
+    CO -->|answer| VOICE -->|audio| G
+    DASH -. shows the transcript<br/>and six avatars .- CO
 ```
 
-How to read it: the glasses stream frames and speech into the Next.js app.
-Perception turns keyframes into events in Atlas, with OpenAI for vision and
-Flatkey as the fallback router. A "Hey World" question goes to the company:
-Mira delegates, Iris and Theo read Atlas, Nova researches in a Tenki or
-Celesto sandbox, Ravi acts through RocketRide, n8n and Kylon, Paritok shrinks
-long reports, every hand-off is mirrored to BAND, and Sol's answer is spoken
-through her Masky avatar. The MCP bridge gives the agents Masky, Tenki and
-RocketRide tools directly. Prelint and Snyk check every pull request, and the
-same frontend also runs as a RocketRide app.
+**2. Who uses which sponsor.** Each agent has its own tools; every hand-off
+is mirrored to BAND.
+
+```mermaid
+flowchart LR
+    MIRA["Mira · GM"] --> IRIS & THEO & NOVA & RAVI
+    IRIS["Iris · Eyes"] --> ATLAS[("Atlas")]
+    THEO["Theo · Ledger"] --> ATLAS
+    NOVA["Nova · Scout"] --> TENKI["Tenki / Celesto<br/>sandbox VM"]
+    RAVI["Ravi · Runner"] --> RR["RocketRide<br/>ops pipeline"] --> N8N["n8n<br/>Tasks · Slack · Gmail"]
+    RAVI --> KYLON["Kylon<br/>connected apps"]
+    NOVA & RAVI --> MCP["MCP bridge<br/>Masky · Tenki · RocketRide"]
+    IRIS & THEO & NOVA & RAVI -->|reports, shrunk by<br/>Paritok| SOL["Sol · Front Desk"]
+    SOL --> MASKY["Masky<br/>face + voice"]
+    MIRA & SOL -.->|every hand-off| BAND["BAND room"]
+    SOL -.->|OpenAI, then<br/>Flatkey| MODELS["Model router"]
+```
+
+**3. Around the code.** Prelint reviews every pull request against
+`specs/product.md`; Snyk scans every push; the same frontend also runs as a
+RocketRide App Builder app (`rocketride-app/`).
 
 ## The company
 
