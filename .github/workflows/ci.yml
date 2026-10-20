@@ -15,6 +15,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Generate Next.js route types
+        # RouteContext and PageProps are globals that `next dev` writes into
+        # .next/types; a fresh checkout needs them before tsc can run.
+        run: npx next typegen
       - name: Typecheck
         run: npx tsc --noEmit
       - name: Lint
